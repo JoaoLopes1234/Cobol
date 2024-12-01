@@ -19,25 +19,25 @@
        FILE SECTION.
        FD INPUT-FILE.
        01 INPUT-RECORD.
-           05 INPUT-NAME           PIC X(16).
-           05 INPUT-AGE            PIC 9(5).
-           05 INPUT-NATIONALITY    PIC A(14).
-           05 INPUT-OBJDANGER      PIC A(11).
-           05 INPUT-TICKET         PIC 9(13).
-           05 INPUT-BAGS           PIC 9(5).
-           05 INPUT-SEAT           PIC X(3).
+           05 INPUT-NAME           PIC X(15).
+           05 INPUT-AGE            PIC 9(2).
+           05 INPUT-NATIONALITY    PIC A(13).
+           05 INPUT-OBJDANGER      PIC A(7).
+           05 INPUT-TICKET         PIC 9(11).
+           05 INPUT-BAGS           PIC 9(11).
+           05 INPUT-SEAT           PIC X(7).
 
        FD OUTPUT-FILE.
       *01 OUTPUT-RECORD.
-      *    05 OUTPUT-NAME          PIC X(16).
-      *    05 OUTPUT-AGE           PIC 9(5).
-      *    05 OUTPUT-NATIONALITY   PIC A(14).
-      *    05 OUTPUT-OBJDANGER     PIC A(11).
-      *    05 OUTPUT-TICKET        PIC 9(13).
-      *    05 OUTPUT-BAGS          PIC 9(5).
-      *    05 OUTPUT-SEAT          PIC X(3).
+      *    05 OUTPUT-NAME          PIC X(15).
+      *    05 OUTPUT-AGE           PIC 9(2).
+      *    05 OUTPUT-NATIONALITY   PIC A(13).
+      *    05 OUTPUT-OBJDANGER     PIC A(7).
+      *    05 OUTPUT-TICKET        PIC 9(11).
+      *    05 OUTPUT-BAGS          PIC 9(11).
+      *    05 OUTPUT-SEAT          PIC X(7).
        01 OUTPUT-TICKET-MESSAGE.
-           05 OUTPUT-MESSAGE       PIC X(67).
+           05 OUTPUT-MESSAGE       PIC X(134) VALUES ZEROES.
 
 
        WORKING-STORAGE SECTION.
@@ -46,22 +46,26 @@
            05 VAL-TICKET           PIC 9(5)V9(2).
            05 FAST-TRACK.
                10 VAL-FAST-TRACK   PIC 9(5)V9(2).
-               88 B-FAST-TRACK     VALUES "Y", "N".
+               88 B-FAST-TRACK     VALUES "Y", "YES", "SIM", "S", 
+                   "s".
            05 BAGS.
                10 VAL-BAGS         PIC 9(5).
                10 CHK-BAGS         PIC 9(1).
                10 TOTAL-BAGS       PIC 9(5).
            05 SEAT.
+               10 SEAT-CODE        PIC X(1).
+                   88 B-SEAT           VALUES "Y", "YES", "SIM", "S", 
+                   "s".
                10 VAL-SEAT         PIC 9(5)V9(2).
-               88 B-SEAT           VALUES "Y", "N".
                10 TOTAL-SEAT       PIC 9(5).
            05 TOTAL-TICKET         PIC 9(6).        
        01 USER.
            05 NAME-USER            PIC X(10).
            05 AGE                  PIC 9(2).
            05 NATIONALITY          PIC A(10).
-           88 OBJ-DANGEROUS        VALUES "Y", "N".   
-       
+           05 OBJ-DANGER           PIC X(1).
+               88 B-OBJ-DANGEROUS  VALUES "Y", "YES", "SIM", "S", 
+                   "s".       
        01 END-FILE                 PIC X(1).
        PROCEDURE DIVISION.
        INITIALIZE USER.
@@ -87,18 +91,35 @@
       *                MOVE INPUT-SEAT TO OUTPUT-SEAT
 
       *                WRITE OUTPUT-RECORD
-                       DISPLAY INPUT-AGE
-                       DISPLAY INPUT-NAME
-                       IF INPUT-AGE < 18 THEN
-                           DISPLAY "INSIDE IF"
-                           MOVE  INPUT-NAME TO OUTPUT-MESSAGE
-                       ELSE
-                           DISPLAY "inside else"
-                           MOVE "YOU CAN" TO OUTPUT-MESSAGE
-                       END-IF
-                       ADD INPUT-AGE TO OUTPUT-MESSAGE
+
+      *           STRING "O passageiro com o nome de " DELIMITED BY SIZE
+      *                        INPUT-NAME DELIMITED BY SIZE
+      *                        INTO OUTPUT-MESSAGE
+
+                STRING " O passageiro com o nome de >" DELIMITED BY SIZE
+                               INPUT-NAME DELIMITED BY SIZE
+                               "<com a idade de >" DELIMITED BY SIZE
+                               INPUT-AGE DELIMITED BY SIZE
+           "< é autorizado a viajar com um valor total de passagem de ",
+                               DELIMITED BY SIZE
+                               INPUT-TICKET DELIMITED BY SIZE
+                               "!" DELIMITED BY SIZE
+                               INTO OUTPUT-MESSAGE
+                               
+                       END-STRING
+      *                ADD 20 TO INPUT-TICKET
+      *                DISPLAY ">" INPUT-TICKET "<"
+
+      *                IF INPUT-AGE < 18 THEN
+      *                    DISPLAY "INSIDE IF"
+      *                    MOVE  INPUT-NAME TO OUTPUT-MESSAGE
+      *                ELSE
+      *                    DISPLAY "inside else"
+      *                    MOVE "YOU CAN" TO OUTPUT-MESSAGE
+      *                END-IF
+      *                ADD INPUT-AGE TO OUTPUT-MESSAGE
                        WRITE OUTPUT-TICKET-MESSAGE
-                      
+      *                
                END-READ
            END-PERFORM
             CLOSE INPUT-FILE

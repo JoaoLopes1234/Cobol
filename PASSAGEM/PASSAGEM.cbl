@@ -23,7 +23,8 @@
                10 TOTAL-BAGS       PIC 9(5).
            05 SEAT.
                10 SEAT-CODE        PIC X(1).
-                   88 B-SEAT           VALUES "Y".
+                   88 B-SEAT       VALUES "Y", "YES", "SIM", "S", "s",
+                   "sim".
                10 VAL-SEAT         PIC 9(5)V9(2).
                
                10 TOTAL-SEAT       PIC 9(5).

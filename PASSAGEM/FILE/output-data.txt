@@ -1,6 +1,6 @@
-Name          Age  Nationality   Obj.Danger Value-ticket Bags Seat
-João Lopes    20   Portuguese    No         500          3    Yes
-Joana Gomes   20   Portuguese    Yes        800          6    No
-Gui Celeste   17   Portuguese    No         600          2    Yes
-Carlos Flor   20   Portuguese    No         450          4    No
-Andreia Moura 20   Portuguese    No         700          2    Yes
+ O passageiro com o nome de >João Lopes    <com a idade de >20< é autorizado a viajar com um valor total de passagem de         500! O passageiro com o nome de >
+Joana Gomes  <com a idade de > 2< é autorizado a viajar com um valor total de passagem de s        80! O passageiro com o nome de >_
+Gui Celeste <com a idade de >  < é autorizado a viajar com um valor total de passagem de o         6! O passageiro com o nome de >es
+Carlos Flor<com a idade de >  < é autorizado a viajar com um valor total de passagem de No         ! O passageiro com o nome de >No_
+Andreia Mo<com a idade de >ur< é autorizado a viajar com um valor total de passagem de  No        ! O passageiro com o nome de > Yes
+Andreia Mo<com a idade de >ur< é autorizado a viajar com um valor total de passagem de  No        !
