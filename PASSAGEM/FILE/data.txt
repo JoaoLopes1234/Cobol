@@ -1,0 +1,6 @@
+Name          Age  Nationality   Obj.Danger Value-ticket Bags Seat
+João Lopes    20   Portuguese    No         500          3    Yes
+Joana Gomes   20   Portuguese    Yes        800          6    No
+Gui Celeste   17   Portuguese    No         600          2    Yes
+Carlos Flor   20   Portuguese    No         450          4    No
+Andreia Moura 20   Portuguese    No         700          2    Yes

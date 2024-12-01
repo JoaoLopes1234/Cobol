@@ -1,0 +1,20 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. mask-test.
+       AUTHOR. JOÃO LOPES.
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+           SPECIAL-NAMES.
+      
+               DECIMAL-POINT IS COMMA.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 IDADE          PIC 9(3) VALUE 0.
+       01 IDADE-MASK     PIC ZZZ.
+
+       PROCEDURE DIVISION.
+           ADD 9 TO IDADE.
+           MOVE IDADE TO IDADE-MASK
+           DISPLAY IDADE-MASK
+           STOP RUN.
