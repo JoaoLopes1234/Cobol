@@ -37,7 +37,7 @@
       *    05 OUTPUT-BAGS          PIC 9(11).
       *    05 OUTPUT-SEAT          PIC X(7).
        01 OUTPUT-TICKET-MESSAGE.
-           05 OUTPUT-MESSAGE       PIC X(134) VALUES ZEROES.
+           05 OUTPUT-MESSAGE       PIC X(135) VALUES ZEROES.
 
 
        WORKING-STORAGE SECTION.
@@ -158,5 +158,4 @@
       *            TOTAL-TICKET " euros.".
            STOP RUN.
 
-      *    COMO FUNCIONA A VIRGULA
-      *    BOAS PRÁTICAS COLOCAR STOP RUN NO MEIO DO CODIGO?     
+ 
