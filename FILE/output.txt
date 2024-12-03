@@ -1,4 +1,7 @@
+#Name          Age  Nationality   Obj.Danger Value-ticket Bags Seat
+
 Joao Pedro--------020
 Maria Silva-------035
 Carlos Santos-----050
+Tiago Ribeiro-----030
 Tiago Ribeiro-----030

@@ -1,4 +1,4 @@
-Name          Age  Nationality   Obj.Danger Value-ticket Bags Seat
+#Name          Age  Nationality   Obj.Danger Value-ticket Bags Seat
 
 Joao Pedro--------020
 Maria Silva-------035
