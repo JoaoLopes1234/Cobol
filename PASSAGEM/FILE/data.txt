@@ -1,5 +1,5 @@
-João Lopes   . 28  .Portuguese   .No-       .500         .3   .Yes
-Afonso Gomes . 21  .Portuguese   .Yes       .800         .6   .No_
-Gui Celeste  . 17  .Portuguese   .No-       .600         .2   .Yes
-Carlos Flor  . 29  .Portuguese   .No-       .450         .4   .No_
-Andreia Moura. 49  .Portuguese   .No-       .700         .2   .Yes
+João Lopes     28   Portuguese    No-       .500         .3   .E
+Afonso Gomes   21   Portuguese    Yes       .800         .6   .P
+Gui Celeste    17   Portuguese    No-       .600         .2   .P
+Carlos Flor    29   Portuguese    No-       .450         .4   .J
+Andreia Moura  49   Portuguese    No-       .700         .2   .E

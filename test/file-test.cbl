@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. PASSAGEM.
+       PROGRAM-ID. PAS-test.
        AUTHOR. JOÃO LOPES.
 
        ENVIRONMENT DIVISION.
@@ -8,10 +8,10 @@
                DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT INPUT-FILE ASSIGN TO "PASSAGEM/FILE/data.txt"
+           SELECT INPUT-FILE ASSIGN TO "test/data-test.txt"
                ORGANIZATION IS LINE SEQUENTIAL.
               
-           SELECT OUTPUT-FILE ASSIGN TO "PASSAGEM/FILE/output-data.txt"
+           SELECT OUTPUT-FILE ASSIGN TO "test/output-test.txt"
                ORGANIZATION IS LINE SEQUENTIAL. 
                
        DATA DIVISION.
@@ -38,7 +38,7 @@
       *    05 OUTPUT-BAGS          PIC 9(11).
       *    05 OUTPUT-SEAT          PIC X(7).
        01 OUTPUT-TICKET-MESSAGE.
-           05 OUTPUT-MESSAGE       PIC X(249).
+           05 OUTPUT-MESSAGE       PIC X(259).
 
 
        WORKING-STORAGE SECTION.
@@ -49,7 +49,7 @@
            05 OUTPUT-NATIONALITY PIC X(20).
            05 OUTPUT-OBJDANGER   PIC X(35).
            05 OUTPUT-TICKET       PIC X(28).
-           05 OUTPUT-BAGS         PIC X(76).
+           05 OUTPUT-BAGS         PIC X(86).
            05 OUTPUT-SEAT         PIC X(48).
 
 
@@ -60,32 +60,37 @@
        01 INPUT-TICKET      PIC 9(11).
        01 INPUT-BAGS        PIC 9(11).
        01 INPUT-SEAT        PIC X(7).
-       01 TICKET.
-           05 VAL-TICKET           PIC 9(5)V9(2).
-           05 FAST-TRACK.
-               10 VAL-FAST-TRACK   PIC 9(5)V9(2).
-               88 B-FAST-TRACK     VALUES "Y", "YES", "SIM", "S", 
-                   "s".
-           05 BAGS.
-               10 VAL-BAGS         PIC 9(5).
-               10 CHK-BAGS         PIC 9(1).
-               10 TOTAL-BAGS       PIC 9(3).
-           05 SEAT.
-               10 SEAT-CODE        PIC X(1).
-                   88 B-SEAT           VALUES "Y", "YES", "SIM", "S", 
-                   "s".
-               10 VAL-SEAT         PIC 9(5)V9(2).
-               10 TOTAL-SEAT       PIC 9(2).
-           05 TOTAL-TICKET         PIC $9(4).        
-       01 USER.
-           05 NAME-USER            PIC X(10).
-           05 AGE                  PIC 9(2).
-           05 NATIONALITY          PIC A(10).
-           05 OBJ-DANGER           PIC X(1).
-               88 B-OBJ-DANGEROUS  VALUES "Y", "YES", "SIM", "S", 
-                   "s".       
+       01 OUTPUT-TEST       PIC X(40).
+      *01 TICKET.
+      *    05 VAL-TICKET           PIC 9(5)V9(2).
+      *    05 FAST-TRACK.
+      *        10 VAL-FAST-TRACK   PIC 9(5)V9(2).
+      *        88 B-FAST-TRACK     VALUES "Y", "YES", "SIM", "S", 
+      *            "s".
+      *    05 BAGS.
+      *        10 VAL-BAGS         PIC 9(5).
+      *        10 CHK-BAGS         PIC 9(1).
+      *        10 TOTAL-BAGS       PIC 9(5).
+      *    05 SEAT.
+      *        10 SEAT-CODE        PIC X(1).
+      *            88 B-SEAT           VALUES "Y", "YES", "SIM", "S", 
+      *            "s".
+      *        10 VAL-SEAT         PIC 9(5)V9(2).
+      *        10 TOTAL-SEAT       PIC 9(5).
+      *    05 TOTAL-TICKET         PIC 9(6).        
+      *01 USER.
+      *    05 NAME-USER            PIC X(10).
+      *    05 AGE                  PIC 9(2).
+      *    05 NATIONALITY          PIC A(10).
+      *    05 OBJ-DANGER           PIC X(1).
+      *        88 B-OBJ-DANGEROUS  VALUES "Y", "YES", "SIM", "S", 
+      *            "s".       
        01 END-FILE                 PIC X(1).
        01 FIRST-CHARACTER          PIC X(1).
+       01 VAL-BAGS                 PIC 9(5).
+       01 TOTAL-BAGS               PIC 9(4).
+       01 TOTAL-SEAT               PIC 9(2).
+       01 TOTAL-TICKET             PIC 9(4).
 
        PROCEDURE DIVISION.
 
@@ -111,22 +116,25 @@
                       
 
 
-                       UNSTRING INPUT-RECORD
+                       UNSTRING INPUT-RECORD delimited by space
                            INTO INPUT-NAME
-                                INPUT-AGE
-                                INPUT-NATIONALITY
-                                INPUT-OBJDANGER
-                                INPUT-TICKET
-                                INPUT-BAGS
-                                INPUT-SEAT
+                           INPUT-AGE
+                           INPUT-NATIONALITY
+                           INPUT-OBJDANGER
+                           INPUT-TICKET
+                           INPUT-BAGS
+                           INPUT-SEAT
+                               
 
-      *                DISPLAY ">" INPUT-NAME "<"
-      *                DISPLAY ">" INPUT-AGE "<"
-      *                DISPLAY ">" INPUT-NATIONALITY "<"
-      *                DISPLAY ">" INPUT-OBJDANGER "<"
-      *                DISPLAY ">" INPUT-TICKET "<"
-      *                DISPLAY ">" INPUT-BAGS "<"
-      *                DISPLAY ">" INPUT-SEAT "<"
+
+
+                       DISPLAY ">" INPUT-NAME "<"
+                       DISPLAY ">" INPUT-AGE "<"
+                       DISPLAY ">" INPUT-NATIONALITY "<"
+                       DISPLAY ">" INPUT-OBJDANGER "<"
+                       DISPLAY ">" INPUT-TICKET "<"
+                       DISPLAY ">" INPUT-BAGS "<"
+                       DISPLAY ">" INPUT-SEAT "<"
 
       *                MOVE INPUT-NAME TO OUTPUT-NAME
       *                MOVE INPUT-AGE TO OUTPUT-AGE
@@ -149,7 +157,7 @@
       *    ADICIONANDO A IDADE DO PASSSAGEIRO
       ******************************************************************
 
-                   STRING " com a idade de " DELIMITED BY SIZE
+                   STRING "< com a idade de " DELIMITED BY SIZE
                           INPUT-AGE DELIMITED BY SPACE
                           INTO OUTPUT-AGE
                          
@@ -166,12 +174,12 @@
       ******************************************************************    
       *    QUANTIDADE DE MALAS
       ******************************************************************
-                   MOVE INPUT-BAGS TO CHK-BAGS
-                   MULTIPLY CHK-BAGS BY VAL-BAGS GIVING TOTAL-BAGS
+                   
+                   MULTIPLY INPUT-BAGS BY VAL-BAGS GIVING TOTAL-BAGS
 
                    
                    STRING " despachou " DELIMITED BY SIZE
-                          CHK-BAGS DELIMITED BY SPACE
+                          INPUT-BAGS DELIMITED BY SPACE
                           ' malas, com o custa de '
                           '30 euros cada uma, totalizando assim '
                           TOTAL-BAGS
@@ -187,15 +195,15 @@
                                    TO OUTPUT-SEAT
                        WHEN '  .J   '
                            MOVE 40 TO TOTAL-SEAT
-           MOVE ' vai se sentar ao lado da janela, custa 40 euros', 
+           MOVE ' vai se sentar ao lado da janela e custa 40 euros', 
                                    TO OUTPUT-SEAT                           
                        WHEN '  .P   '  
                            MOVE 50 TO TOTAL-SEAT
-           MOVE ' vai viajar em classe premium, custará 50 euros', 
+           MOVE ' vai viajar em classe economica e custa 50 euros', 
                                    TO OUTPUT-SEAT
                        WHEN OTHER
                            MOVE 0 TO TOTAL-SEAT
-                           MOVE 'o assento informado não é válido.', 
+                           MOVE 'O assento informado não é válido.', 
                                    TO OUTPUT-SEAT
                    END-EVALUATE
 
@@ -214,14 +222,14 @@
       *    CONCATENACAO EM UMA STRING SÓ
       ******************************************************************
 
-                   STRING OUTPUT-NAME
-                           OUTPUT-AGE
-                           OUTPUT-OBJDANGER
-                           OUTPUT-BAGS
-                           OUTPUT-SEAT
-                           OUTPUT-TICKET
-                          INTO OUTPUT-MESSAGE
-                   END-STRING
+      *            STRING OUTPUT-NAME
+      *                    OUTPUT-AGE
+      *                    OUTPUT-OBJDANGER
+      *                    OUTPUT-BAGS
+      *                    OUTPUT-SEAT
+      *                    OUTPUT-TICKET
+      *                   INTO OUTPUT-MESSAGE
+      *            END-STRING
                    WRITE OUTPUT-TICKET-MESSAGE
                END-READ
            END-PERFORM
