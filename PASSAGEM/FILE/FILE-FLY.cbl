@@ -18,17 +18,19 @@
        
        FILE SECTION.
        FD INPUT-FILE.
-       01 INPUT-RECORD             PIC X(67).
-           
-      *    05 INPUT-NAME           PIC X(15).
-      *    05 INPUT-AGE            PIC 9(2).
-      *    05 INPUT-NATIONALITY    PIC A(13).
-      *    05 INPUT-OBJDANGER      PIC A(7).
-      *    05 INPUT-TICKET         PIC 9(11).
-      *    05 INPUT-BAGS           PIC 9(11).
-      *    05 INPUT-SEAT           PIC X(7).
+       01 INPUT-RECORD            PIC X(39).
+      *    05 INPUT-NAME           PIC X(14).
+      *    05 INPUT-AGE            PIC 9(4).
+      *    05 INPUT-NATIONALITY    PIC X(11).
+      *    05 INPUT-OBJDANGER      PIC X(4).
+      *    05 INPUT-TICKET         PIC 9(4).
+      *    05 INPUT-BAGS           PIC 9(2).
+      *    05 INPUT-SEAT           PIC X(3).
 
        FD OUTPUT-FILE.
+       01 OUTPUT-TICKET-MESSAGE.
+           05 OUTPUT-MESSAGE       PIC X(252).
+
       *01 OUTPUT-RECORD.
       *    05 OUTPUT-NAME          PIC X(15).
       *    05 OUTPUT-AGE           PIC 9(2).
@@ -37,29 +39,27 @@
       *    05 OUTPUT-TICKET        PIC 9(11).
       *    05 OUTPUT-BAGS          PIC 9(11).
       *    05 OUTPUT-SEAT          PIC X(7).
-       01 OUTPUT-TICKET-MESSAGE.
-           05 OUTPUT-MESSAGE       PIC X(249).
-
 
        WORKING-STORAGE SECTION.
 
        01 OUTPUT-MESSAGES.
-           05 OUTPUT-NAME   PIC X(42).
-           05 OUTPUT-AGE    PIC X(20).
+           05 OUTPUT-NAME   PIC X(43).
+           05 OUTPUT-AGE    PIC X(22).
            05 OUTPUT-NATIONALITY PIC X(20).
-           05 OUTPUT-OBJDANGER   PIC X(35).
-           05 OUTPUT-TICKET       PIC X(28).
+           05 OUTPUT-OBJDANGER   PIC X(34).
+           05 OUTPUT-TICKET       PIC X(29).
            05 OUTPUT-BAGS         PIC X(76).
            05 OUTPUT-SEAT         PIC X(48).
 
+       01 WS-FILE.
+           05 WS-NAME        PIC X(14).
+           05 WS-AGE         PIC 9(3).
+           05 WS-NATIONALITY PIC X(11).
+           05 WS-OBJDANGER   PIC X(4).
+           05 WS-TICKET      PIC 9(4).
+           05 WS-BAGS        PIC 9(2).
+           05 WS-SEAT        PIC X(3).
 
-       01 INPUT-NAME        PIC X(15).
-       01 INPUT-AGE         PIC 9(3).
-       01 INPUT-NATIONALITY PIC X(13).
-       01 INPUT-OBJDANGER   PIC X(7).
-       01 INPUT-TICKET      PIC 9(11).
-       01 INPUT-BAGS        PIC 9(11).
-       01 INPUT-SEAT        PIC X(7).
        01 TICKET.
            05 VAL-TICKET           PIC 9(5)V9(2).
            05 FAST-TRACK.
@@ -68,33 +68,23 @@
                    "s".
            05 BAGS.
                10 VAL-BAGS         PIC 9(5).
-               10 CHK-BAGS         PIC 9(1).
                10 TOTAL-BAGS       PIC 9(3).
            05 SEAT.
                10 SEAT-CODE        PIC X(1).
                    88 B-SEAT           VALUES "Y", "YES", "SIM", "S", 
                    "s".
-               10 VAL-SEAT         PIC 9(5)V9(2).
                10 TOTAL-SEAT       PIC 9(2).
            05 TOTAL-TICKET         PIC $9(4).        
-       01 USER.
-           05 NAME-USER            PIC X(10).
-           05 AGE                  PIC 9(2).
-           05 NATIONALITY          PIC A(10).
-           05 OBJ-DANGER           PIC X(1).
-               88 B-OBJ-DANGEROUS  VALUES "Y", "YES", "SIM", "S", 
-                   "s".       
-       01 END-FILE                 PIC X(1).
-       01 FIRST-CHARACTER          PIC X(1).
+        
+       77 END-FILE                 PIC X(1).
 
        PROCEDURE DIVISION.
+       
 
-           MOVE 30 TO VAL-BAGS.
-
+       1001-OPEN-FILES.
 
            OPEN INPUT INPUT-FILE
                 OUTPUT OUTPUT-FILE.
-
            PERFORM UNTIL END-FILE = "S"
                READ INPUT-FILE INTO INPUT-RECORD
                    AT END
@@ -109,110 +99,120 @@
       *                MOVE INPUT-RECORD(50:11) TO INPUT-BAGS       
       *                MOVE INPUT-RECORD(61:7) TO INPUT-SEAT       
                       
-
-
                        UNSTRING INPUT-RECORD
-                           INTO INPUT-NAME
-                                INPUT-AGE
-                                INPUT-NATIONALITY
-                                INPUT-OBJDANGER
-                                INPUT-TICKET
-                                INPUT-BAGS
-                                INPUT-SEAT
+                           INTO WS-NAME
+                                WS-AGE
+                                WS-NATIONALITY
+                                WS-OBJDANGER
+                                WS-TICKET
+                                WS-BAGS
+                                WS-SEAT
 
-      *                DISPLAY ">" INPUT-NAME "<"
+      *                DISPLAY ">" WS-NAME "<"
       *                DISPLAY ">" INPUT-AGE "<"
       *                DISPLAY ">" INPUT-NATIONALITY "<"
       *                DISPLAY ">" INPUT-OBJDANGER "<"
       *                DISPLAY ">" INPUT-TICKET "<"
       *                DISPLAY ">" INPUT-BAGS "<"
       *                DISPLAY ">" INPUT-SEAT "<"
+               PERFORM 2001-ADD-PASSENGER-NAME
+               PERFORM 2002-ADD-PASSENGER-AGE
+               PERFORM 2003-CHECK-AUTHORIZATION
+               PERFORM 2004-CALCULATE-BAGGAGE-COST
+               PERFORM 2005-DETERMINE-SEAT-COST
+               PERFORM 2006-CALCULATE-TOTAL-TICKET
+               PERFORM 2007-CONCATENATE-MESSAGES
+      *        PERFORM 3001-CLOSE-FILES
+      *        PERFORM 3002-END-PROGRAM
 
-      *                MOVE INPUT-NAME TO OUTPUT-NAME
-      *                MOVE INPUT-AGE TO OUTPUT-AGE
-      *                MOVE INPUT-NATIONALITY TO OUTPUT-NATIONALITY
-      *                MOVE INPUT-OBJDANGER TO OUTPUT-OBJDANGER
-      *                MOVE INPUT-TICKET TO OUTPUT-TICKET
-      *                MOVE INPUT-BAGS TO OUTPUT-BAGS
-      *                MOVE INPUT-SEAT TO OUTPUT-SEAT
+               WRITE OUTPUT-TICKET-MESSAGE                     
+               END-READ
 
-      *                WRITE OUTPUT-RECORD
+           END-PERFORM.   
+
       ******************************************************************    
-      *    ADICIONANDO O NOME DO PASSSAGEIRO
+      *    ADICIONAR O NOME DO PASSSAGEIRO
       ******************************************************************
-
+       2001-ADD-PASSENGER-NAME.
                   STRING "O passageiro com o nome de " DELIMITED BY SIZE
-                          INPUT-NAME DELIMITED BY SIZE
-                          INTO OUTPUT-NAME
+                         ">" WS-NAME "<" DELIMITED BY SIZE
+                          INTO OUTPUT-NAME.
 
       ******************************************************************    
-      *    ADICIONANDO A IDADE DO PASSSAGEIRO
+      *    ADICIONAR A IDADE DO PASSSAGEIRO
       ******************************************************************
-
+       
+       2002-ADD-PASSENGER-AGE.
                    STRING " com a idade de " DELIMITED BY SIZE
-                          INPUT-AGE DELIMITED BY SPACE
-                          INTO OUTPUT-AGE
+                          ">"WS-AGE"<" DELIMITED BY SPACE
+                          INTO OUTPUT-AGE.
                          
       ******************************************************************    
-      *    AUTORIZACAO
+      *    VERIFICAÇÃO DE AUTORIZAÇÃO
       ******************************************************************
-                   IF INPUT-AGE < 18 OR INPUT-OBJDANGER = '  .Yes ' THEN
+       2003-CHECK-AUTHORIZATION.      
+                   IF WS-AGE < 18 OR WS-OBJDANGER = '  .Yes ' THEN
                            MOVE ' terá de fazer check in no balcao '
                                    TO OUTPUT-OBJDANGER
                    ELSE
                            MOVE " é autorizado a viajar"
                                    TO OUTPUT-OBJDANGER
-                   END-IF
+                   END-IF.
+
       ******************************************************************    
       *    QUANTIDADE DE MALAS
       ******************************************************************
-                   MOVE INPUT-BAGS TO CHK-BAGS
-                   MULTIPLY CHK-BAGS BY VAL-BAGS GIVING TOTAL-BAGS
+       2004-CALCULATE-BAGGAGE-COST.  
 
+                   MOVE 30 TO VAL-BAGS
+                   MULTIPLY WS-BAGS BY VAL-BAGS GIVING TOTAL-BAGS
                    
                    STRING " despachou " DELIMITED BY SIZE
-                          CHK-BAGS DELIMITED BY SPACE
+                          WS-BAGS DELIMITED BY SPACE
                           ' malas, com o custa de '
                           '30 euros cada uma, totalizando assim '
                           TOTAL-BAGS
-                          INTO OUTPUT-BAGS
+                          INTO OUTPUT-BAGS.
 
       ******************************************************************    
       *    TIPO DE ASSENTO
       ******************************************************************
-                   EVALUATE INPUT-SEAT
-                       WHEN '  .E   '
+       2005-DETERMINE-SEAT-COST.
+                   EVALUATE WS-SEAT
+                       WHEN 'E'
                            MOVE 30 TO TOTAL-SEAT
            MOVE ' vai viajar em classe economica e custa 30 euros '
                                    TO OUTPUT-SEAT
-                       WHEN '  .J   '
+                       WHEN 'J'
                            MOVE 40 TO TOTAL-SEAT
            MOVE ' vai se sentar ao lado da janela, custa 40 euros', 
                                    TO OUTPUT-SEAT                           
-                       WHEN '  .P   '  
+                       WHEN 'P'  
                            MOVE 50 TO TOTAL-SEAT
            MOVE ' vai viajar em classe premium, custará 50 euros', 
                                    TO OUTPUT-SEAT
                        WHEN OTHER
                            MOVE 0 TO TOTAL-SEAT
-                           MOVE 'o assento informado não é válido.', 
+                           MOVE ' o assento informado não é válido ', 
                                    TO OUTPUT-SEAT
-                   END-EVALUATE
+                   END-EVALUATE.
 
       ******************************************************************    
       *    SOMA TOTAL DOS VALORES
       ******************************************************************
+       2006-CALCULATE-TOTAL-TICKET.      
 
                    COMPUTE TOTAL-TICKET  = TOTAL-BAGS + TOTAL-SEAT,
-                                           + INPUT-TICKET
+                                           + WS-TICKET
 
                    STRING ' com um valor total de ' 
                            TOTAL-TICKET
                            '!'
-                           INTO OUTPUT-TICKET
+                           INTO OUTPUT-TICKET.
       ******************************************************************    
       *    CONCATENACAO EM UMA STRING SÓ
       ******************************************************************
+       2007-CONCATENATE-MESSAGES.      
 
                    STRING OUTPUT-NAME
                            OUTPUT-AGE
@@ -221,14 +221,20 @@
                            OUTPUT-SEAT
                            OUTPUT-TICKET
                           INTO OUTPUT-MESSAGE
-                   END-STRING
-                   WRITE OUTPUT-TICKET-MESSAGE
-               END-READ
-           END-PERFORM
+                   END-STRING.
+
+      ******************************************************************
+      *    FECHANDO OS ARQUIVOS
+      ******************************************************************
+       3001-CLOSE-FILES.
 
            CLOSE INPUT-FILE
-           CLOSE OUTPUT-FILE.
-           
+                 OUTPUT-FILE.
+                 
+      ******************************************************************
+      *    FIM DO PROGRAMA
+      ******************************************************************
+       3002-END-PROGRAM.    
            STOP RUN.
 
  
