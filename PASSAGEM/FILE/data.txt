@@ -1,5 +1,5 @@
-João Lopes    28 Portuguese No- 500 3E
-Afonso Gomes  21 Portuguese Yes 800 6 P
-Gui Celeste   17 Portuguese No- 600 2 P
-Carlos Flor   29 Portuguese No- 450 4 J
-Andreia Moura 49 Portuguese No- 700 2 E
+João     28Portuguesa No- 500 3 E Lopes
+Afonso Gomes  21 Italiana   Yes 800 6 P
+Gui Celeste   17 Inglesa    No- 600 2 P
+Carlos Flor   29 Russa      No- 450 4 J
+Andreia Moura 49 Portuguesa No- 700 2 E
